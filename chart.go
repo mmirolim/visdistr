@@ -21,17 +21,17 @@ var (
 var Background = color.RGBA{0xff, 0xff, 0xff, 0xff}
 
 // -------------------------------------------------------------------------
-// Dumper
+// Img
 
-// Dumper helps saving plots of size WxH in a NxM grid layout
+// Img helps saving plots of size WxH in a NxM grid layout
 // in several formats
-type Dumper struct {
+type Img struct {
 	N, M, W, H, Cnt int
 	I               *image.RGBA
 }
 
-func NewDumper(n, m, w, h int) *Dumper {
-	dumper := Dumper{N: n, M: m, W: w, H: h}
+func NewImg(n, m, w, h int) *Img {
+	dumper := Img{N: n, M: m, W: w, H: h}
 
 	dumper.I = image.NewRGBA(image.Rect(0, 0, n*w, m*h))
 	bg := image.NewUniform(color.RGBA{0xff, 0xff, 0xff, 0xff})
@@ -41,7 +41,7 @@ func NewDumper(n, m, w, h int) *Dumper {
 }
 
 // Plot a chart
-func (d *Dumper) Plot(c chart.Chart) {
+func (d *Img) Plot(c chart.Chart) {
 	row, col := d.Cnt/d.N, d.Cnt%d.N
 
 	igr := imgg.AddTo(d.I, col*d.W, row*d.H, d.W, d.H, color.RGBA{0xff, 0xff, 0xff, 0xff}, nil, nil)
@@ -69,7 +69,7 @@ func gauss(n int, s, a, l, u float64) []float64 {
 //
 // Histograms Charts
 //
-func histChart(name, title string, stacked, counts, shifted bool, dumper *Dumper) {
+func histChart(name, title string, points []float64, stacked, counts, shifted bool, dumper *Img) {
 
 	hc := chart.HistChart{Title: title, Stacked: stacked, Counts: counts, Shifted: shifted}
 	hc.XRange.Label = "Sample Value"
@@ -79,7 +79,6 @@ func histChart(name, title string, stacked, counts, shifted bool, dumper *Dumper
 		hc.YRange.Label = "Rel. Frequency [%]"
 	}
 	hc.Key.Hide = true
-	points := gauss(150, 10, 20, 0, 50)
 	hc.AddData("Sample 1", points,
 		chart.Style{ /*LineColor: color.NRGBA{0xff,0x00,0x00,0xff}, LineWidth: 1, LineStyle: 1, FillColor: color.NRGBA{0xff,0x80,0x80,0xff}*/ })
 	hc.Kernel = chart.BisquareKernel //  chart.GaussKernel // chart.EpanechnikovKernel // chart.RectangularKernel // chart.BisquareKernel

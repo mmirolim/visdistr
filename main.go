@@ -33,7 +33,10 @@ func dstr(w ResponseWriter, r *Request) {
 	// get distribution name from url path
 	dist := strings.Replace(r.URL.Path, "/", "", -1)
 	// define image params
-	img := NewDumper(2, 2, 400, 300)
-	histChart(dist, "test histo", true, true, false, img)
+	img := NewImg(2, 2, 400, 300)
+	// plot histogram
+	points := gauss(150, 10, 20, 0, 50)
+	histChart(dist, "test histo", points, true, true, false, img)
+	// encode RGBA to png
 	png.Encode(w, img.I)
 }
