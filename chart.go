@@ -69,7 +69,7 @@ func gauss(n int, s, a, l, u float64) []float64 {
 //
 // Histograms Charts
 //
-func histChart(name, title string, points []float64, stacked, counts, shifted bool, dumper *Img) {
+func histChart(title string, points []float64, stacked, counts, shifted bool, dumper *Img) {
 
 	hc := chart.HistChart{Title: title, Stacked: stacked, Counts: counts, Shifted: shifted}
 	hc.XRange.Label = "Sample Value"
